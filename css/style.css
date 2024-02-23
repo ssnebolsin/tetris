@@ -25,6 +25,7 @@ img {
   background: #231414;
   border: 1px solid #ccc;
   aspect-ratio: 1/1;
+  color: white;
 }
 .cell--1 {
   background: blue;
