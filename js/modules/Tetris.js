@@ -1,6 +1,6 @@
 export class Tetris {
     constructor() {
-        this.isPaused = true
+        this.isPaused = false
         this.field = [];
         this.fieldsWidth = 10;
         this.fieldHeight = 20;
@@ -11,17 +11,17 @@ export class Tetris {
         //     [1,2,11,10]
         // ]
         this.figures = [
-             [[1,11,21,2]],
-             [[1,2,11,10]],
-             [[1,11,21,31]],
-             [[1,2,11,12]]
-        ]
+            [[4,14,24,5]],
+            [[4,5,14,13]],
+            [[4,14,24,34]],
+            [[4,5,14,15]]
+       ]
         this.randomFigure = this.figures[Math.floor(Math.random()*4)]
     }
     generateField() {
         this.field = new Array(this.fieldHeight).fill(new Array(this.fieldsWidth).fill(0))
         this.createField()
-        this.togglePause()
+        // this.togglePause()
     }
     togglePause() {
         this.isPaused = !this.isPaused
@@ -54,26 +54,79 @@ export class Tetris {
     renderFigure(){
         for(let i = 0; i < this.randomFigure[0].length; i++){
             // console.log(this.randomFigure[0][i])
-            document.querySelector(`#id${this.randomFigure[0][i]}`).classList.add('cell--1')
+            document.querySelector(`#id${this.randomFigure[0][i]}`).classList.add('cell--1', 'taken')
+
+            // let id = this.randomFigure[0][i]
+            // id < 10 ? this.field[0][id] = 1 : this.field[Math.floor(id/10)][id%10] = 1
+            // id < 10 ? this.field[0][2] = 1 : true
+            // console.log(this.field[0][i] = 2)
+        }
+        // console.log(this.field)
+    }
+    renderNewFigure(){
+        this.figures = [
+            [[4,14,24,5]],
+            [[4,5,14,13]],
+            [[4,14,24,34]],
+            [[4,5,14,15]]
+       ]
+        this.randomFigure = this.figures[Math.floor(Math.random()*4)]
+        for(let i = 0; i < this.randomFigure[0].length; i++){
+            // console.log(this.randomFigure[0][i])
+            document.querySelector(`#id${this.randomFigure[0][i]}`).classList.add('cell--1', 'taken')
         }
     }
     unRenderFigure(){
         for(let i = 0; i < this.randomFigure[0].length; i++){
             // console.log(this.lFigure[0][i])
-            document.querySelector(`#id${this.randomFigure[0][i]}`).classList.remove('cell--1')
+            document.querySelector(`#id${this.randomFigure[0][i]}`).classList.remove('cell--1', 'taken')
+
+            let id = this.randomFigure[0][i]
+            id < 10 ? this.field[0][id] = 0 : this.field[Math.floor(id/10)][id%10] = 0
         }
     }
     moveFigure(){
-        setInterval(() => {
-            this.unRenderFigure()
-            console.log(Math.max(...this.randomFigure[0]))
-            if(Math.max(...this.randomFigure[0]) < this.fieldHeight * this.fieldsWidth - 10) {
-                this.randomFigure[0] = this.randomFigure[0].map(v=> v+10)
-            } 
             this.renderFigure()
-        }, 1000);
-        // console.log(this.figures[0])
-        // console.log(Math.floor(Math.random()*4))
+            let moveInterval = setInterval(() => {
+                this.unRenderFigure()
+                // console.log(document.querySelector(`#id${this.randomFigure[0][0]}`))
+                // console.log(this.randomFigure[0][0] + 10)
+                // console.log(this.randomFigure[0].map(v=> v+10))
+                
+                this.randomFigure[0] = this.randomFigure[0].map(v=> v+10)
+                if(
+                    document.querySelector(`#id${this.randomFigure[0][0]}`).classList.contains('taken') ||
+                    document.querySelector(`#id${this.randomFigure[0][1]}`).classList.contains('taken') ||
+                    document.querySelector(`#id${this.randomFigure[0][2]}`).classList.contains('taken') ||
+                    document.querySelector(`#id${this.randomFigure[0][3]}`).classList.contains('taken')
+                
+                ) {
+                    this.randomFigure[0] = this.randomFigure[0].map(v=> v-10)
+                    this.renderFigure()
+                    clearInterval(moveInterval)
+                    this.renderNewFigure()
+                    this.moveFigure()
+                }
+                // console.log(Math.max(...this.randomFigure[0]))
+                // document.querySelectorAll(`#id${}`)
+                // console.log(this.field[rowNum])
+                this.renderFigure()
+            if(Math.max(...this.randomFigure[0]) >= this.fieldHeight * this.fieldsWidth - 10){
+                clearInterval(moveInterval)
+                this.renderNewFigure()
+                this.moveFigure()
+            }
+            if(this.isPaused){
+                clearInterval(moveInterval)
+            }
+            }, 500);
     }
-
+    moveFigureRight(){
+        this.unRenderFigure()
+        this.randomFigure[0] = this.randomFigure[0].map(v=> v+1)
+    }
+    moveFigureLeft(){
+        this.unRenderFigure()
+        this.randomFigure[0] = this.randomFigure[0].map(v=> v-1)
+    }
 }
