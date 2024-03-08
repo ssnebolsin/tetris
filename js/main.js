@@ -34,6 +34,17 @@ window.addEventListener('keydown', (e)=>{
         e.preventDefault();
         console.log('key left')
         tetris.moveFigureLeft()
+    } else 
+    if(e.keyCode == '38'){
+        e.preventDefault();
+        console.log('key up')
+        tetris.rotateFigureLeft()
+    } else
+    if(e.keyCode == '32'){
+        e.preventDefault();
+        tetris.togglePause()
+        console.log(tetris.isPaused)
+        tetris.moveFigure()
     }
 }
 )
