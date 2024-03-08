@@ -85,7 +85,7 @@ export class Tetris {
             let cell = document.createElement('div');
             cell.classList.add('cell', "cell--0")
             // cell.setAttribute('id',`id${i}`);
-            cell.innerText = `${i}`
+            // cell.innerText = `${i}`
             document.querySelector('.field').appendChild(cell)
         }
         this.squares = Array.from(document.querySelectorAll('.cell'))
@@ -193,7 +193,7 @@ export class Tetris {
             if(this.isPaused){
                 clearInterval(moveInterval)
             }
-            }, 500);
+            }, 300);
     }
     moveFigureRight(){
         this.unRenderFigure()
